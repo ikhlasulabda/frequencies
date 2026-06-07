@@ -376,7 +376,7 @@ export default function ResultCard({ result, previewUrl }: ResultCardProps) {
                                         zIndex: 10
                                     }}
                                 >
-                                    find yours on frequencies.com
+                                    find yours on frequenciess.vercel.app
                                 </span>
                             </div>
                         </div>
