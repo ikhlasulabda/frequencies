@@ -87,22 +87,6 @@ export default function ResultCard({ result, previewUrl }: ResultCardProps) {
 
         try {
             const blob = await captureCard(cardRef.current)
-            const file = new File([blob], 'my-frequency.png', { type: 'image/png' })
-
-            // Try Web Share API first (mobile native share sheet)
-            if (typeof navigator.share === 'function' && navigator.canShare?.({ files: [file] })) {
-                try {
-                    await navigator.share({ files: [file], title: 'My Frequency' })
-                    return // Success
-                } catch (err: unknown) {
-                    if (err instanceof Error && err.name === 'AbortError') {
-                        return // User cancelled
-                    }
-                    // Continue to fallback if Web Share fails
-                }
-            }
-
-            // Fallback: download + instruction
             triggerDownload(blob)
             showToast('Gambar tersimpan!', 'Buka Instagram → Story → pilih foto ini')
         } catch (err) {
@@ -149,7 +133,7 @@ export default function ResultCard({ result, previewUrl }: ResultCardProps) {
                 <div
                     style={{
                         boxShadow: '0 20px 60px rgba(0,0,0,0.60), 0 8px 24px rgba(0,0,0,0.40)',
-                        borderRadius: '12px',
+                        borderRadius: 0,
                     }}
                 >
                     {/* ─── SHAREABLE CARD ─── */}
@@ -268,7 +252,7 @@ export default function ResultCard({ result, previewUrl }: ResultCardProps) {
                                         width: '32px',
                                         height: '1.5px',
                                         marginBottom: '14px',
-                                        background: '#facc15', // 1. Garis kecil diubah jadi warna kuning
+                                        background: 'linear-gradient(90deg,#ff6bfe,#a78bfa)',
                                     }}
                                 />
                                 <p
@@ -286,6 +270,15 @@ export default function ResultCard({ result, previewUrl }: ResultCardProps) {
                                     &ldquo;{result.punchline}&rdquo;
                                 </p>
                             </div>
+
+                            {/* Separator */}
+                            <div
+                                style={{
+                                    height: '1px',
+                                    background: 'rgba(255,255,255,0.07)',
+                                    margin: '16px 0',
+                                }}
+                            />
 
                             {/* Track info */}
                             <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
@@ -336,44 +329,14 @@ export default function ResultCard({ result, previewUrl }: ResultCardProps) {
                             </div>
 
                             {/* Footer */}
-                            <div
-                                style={{
-                                    textAlign: 'center',
-                                    paddingTop: '18px',
-                                    display: 'flex',
-                                    flexDirection: 'column',
-                                    alignItems: 'center',
-                                    position: 'relative',
-                                    height: '55px',
-                                    justifyContent: 'flex-end'
-                                }}
-                            >
-                                {/* Nilai bottom diganti dari 28px ke 18px biar posisi logo agak turun kebawah */}
-                                <img
-                                    src="/logowhite.png"
-                                    alt="App Logo"
-                                    style={{
-                                        height: '100px',
-                                        width: 'auto',
-                                        objectFit: 'contain',
-                                        filter: 'drop-shadow(0 0 1px #facc15)',
-                                        position: 'absolute',
-                                        bottom: '-10px', // <--- UBAH DI SINI (makin kecil angkanya, makin turun logonya)
-                                        left: '50%',
-                                        transform: 'translateX(-50%)',
-                                        pointerEvents: 'none'
-                                    }}
-                                />
-
+                            <div style={{ textAlign: 'center', paddingTop: '18px' }}>
                                 <span
                                     style={{
                                         fontSize: '13px',
                                         letterSpacing: '0.02em',
-                                        color: '#facc15',
+                                        color: '#e83232',
                                         fontFamily: 'jetbrains mono, monospace',
                                         fontWeight: 500,
-                                        position: 'relative',
-                                        zIndex: 10
                                     }}
                                 >
                                     find yours on frequencies.com

@@ -15,10 +15,10 @@ export async function callGemini(prompt: string): Promise<GeminiResult> {
                 generationConfig: {
                     response_mime_type: 'application/json',
                     temperature: 0.7,
-                    maxOutputTokens: 200
+                    maxOutputTokens: 8192
                 }
             }),
-            signal: AbortSignal.timeout(10000)
+            signal: AbortSignal.timeout(20000)
         }
     )
 

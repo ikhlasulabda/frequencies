@@ -26,14 +26,17 @@ export async function POST(req: NextRequest) {
         const key = 'ratelimit:' + createHash('sha256').update(raw).digest('hex')
 
         const count = await redis.incr(key)
-        if (count === 1) await redis.expire(key, 1800) // 30 menit
+        if (count === 1) {
+            await redis.expire(key, 900) // 15 minutes (900 seconds)
+        }
 
-        if (count > 3) {
+        // Limit to 4 requests per 15 minutes. The 5th one is blocked (count > 4).
+        if (count > 4) {
             const ttl = await redis.ttl(key)
             return Response.json({ allowed: false, retryAfter: ttl }, { status: 429 })
         }
 
-        return Response.json({ allowed: true, remaining: 3 - count })
+        return Response.json({ allowed: true, remaining: 4 - count })
 
     } catch {
         return Response.json({ error: 'SERVER_ERROR' }, { status: 500 })

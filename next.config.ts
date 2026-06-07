@@ -2,6 +2,9 @@
 import type { NextConfig } from 'next'
 
 const nextConfig: NextConfig = {
+  // Tambahin IP lokal lo di sini
+  allowedDevOrigins: ['192.168.0.108'],
+
   async headers() {
     return [
       {

@@ -3,9 +3,12 @@
 
 import { useEffect, useState } from 'react'
 import { useParams, useRouter } from 'next/navigation'
+import { motion } from 'framer-motion'
 import { SessionResult } from '@/types'
 import ResultCard from '@/components/ResultCard'
 import LoadingScreen from '@/components/LoadingScreen'
+import styles from './ResultPage.module.css'
+// AudioPlayer functionality is now integrated directly into ResultCard
 
 interface ResultData extends SessionResult {
     preview_url: string | null
@@ -45,18 +48,47 @@ export default function ResultPage() {
         fetchResult()
     }, [sessionId])
 
+    // Aurora blob layer — fixed, 3 div mengambang
+    const auroraLayer = (
+        <div className={styles.beamLayer}>
+            <div className={styles.blob1} />
+            <div className={styles.blob2} />
+            <div className={styles.blob3} />
+        </div>
+    )
+
     if (error) {
         return (
-            <main className="min-h-screen bg-black text-white flex flex-col
-        items-center justify-center px-6 gap-4">
-                <p className="text-gray-400 text-sm">{error}</p>
-                <button
-                    onClick={() => router.push('/')}
-                    className="px-6 py-3 border border-white text-white text-sm
-            hover:bg-white hover:text-black transition-colors"
+            <main className={`page-shell ${styles.pageShell}`} style={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                padding: '24px',
+            }}>
+                {auroraLayer}
+                <motion.div
+                    initial={{ opacity: 0, y: 16 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className={`content-col ${styles.inner}`}
+                    style={{ textAlign: 'center' }}
                 >
-                    Coba Lagi
-                </button>
+                    <p className="font-body" style={{
+                        fontSize: '17px',
+                        color: 'var(--foreground)',
+                        marginBottom: '24px',
+                        fontWeight: 500,
+                    }}>
+                        {error}
+                    </p>
+                    <button
+                        onClick={() => router.push('/')}
+                        className="btn-primary"
+                        style={{ maxWidth: '280px', margin: '0 auto' }}
+                    >
+                        Coba Lagi
+                    </button>
+                </motion.div>
             </main>
         )
     }
@@ -64,20 +96,51 @@ export default function ResultPage() {
     if (!result) return <LoadingScreen />
 
     return (
-        <main className="min-h-screen bg-black text-white flex flex-col
-      items-center justify-center px-6 py-12">
+        <main className={`page-shell ${styles.pageShell}`} style={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: '36px 24px 44px',
+            position: 'relative',
+        }}>
+            {auroraLayer}
 
-            <ResultCard
-                result={result}
-                previewUrl={result.preview_url}
-            />
+            <div className={`page-inner content-col ${styles.inner}`}>
 
-            <button
-                onClick={() => router.push('/')}
-                className="mt-8 text-sm text-gray-500 hover:text-white transition-colors"
-            >
-                ← mulai lagi
-            </button>
+                <motion.div
+                    initial={{ opacity: 0, y: -12 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5 }}
+                    style={{ textAlign: 'center', marginBottom: '24px' }}
+                >
+                    <p className="font-body" style={{
+                        fontSize: '14px',
+                        color: '#000000',
+                        marginTop: '10px',
+                        fontWeight: 500,
+                    }}>
+                        semoga cocok, kalo engga ya cocokin.
+                    </p>
+                </motion.div>
+
+                <ResultCard
+                    result={result}
+                    previewUrl={result.preview_url}
+                />
+
+                <motion.button
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 0.5, delay: 0.6 }}
+                    onClick={() => router.push('/')}
+                    className={styles.btnBack}
+                    style={{ display: 'block', margin: '28px auto 0', textAlign: 'center' }}
+                >
+                    pilih lagi
+                </motion.button>
+
+            </div>
         </main>
     )
 }

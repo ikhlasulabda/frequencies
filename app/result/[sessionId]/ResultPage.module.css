@@ -1,0 +1,133 @@
+/* ── Result page — aurora style background (Holi Warm Theme) ───────── */
+
+.pageShell {
+  /* Pake warna bg-warm yang lu kasih */
+  background: #FFFCF5; 
+  overflow: hidden;
+}
+
+/* ── Fixed layer biar ga ikut scroll ────────────────────────── */
+.beamLayer {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ── Keyframes — gerak mengambang + rotate pelan (TETAP SAMA) ─────────────── */
+@keyframes auroraMove1 {
+  0%   { transform: translate(0%, 0%) rotate(0deg); }
+  25%  { transform: translate(8%, 6%) rotate(8deg); }
+  50%  { transform: translate(-5%, 10%) rotate(-6deg); }
+  75%  { transform: translate(6%, -4%) rotate(10deg); }
+  100% { transform: translate(0%, 0%) rotate(0deg); }
+}
+
+@keyframes auroraMove2 {
+  0%   { transform: translate(0%, 0%) rotate(0deg); }
+  20%  { transform: translate(-7%, 5%) rotate(-10deg); }
+  50%  { transform: translate(9%, -6%) rotate(7deg); }
+  80%  { transform: translate(-4%, 8%) rotate(-5deg); }
+  100% { transform: translate(0%, 0%) rotate(0deg); }
+}
+
+@keyframes auroraMove3 {
+  0%   { transform: translate(0%, 0%) rotate(0deg); }
+  30%  { transform: translate(5%, -8%) rotate(12deg); }
+  60%  { transform: translate(-8%, 4%) rotate(-8deg); }
+  100% { transform: translate(0%, 0%) rotate(0deg); }
+}
+
+/* ── Blob 1 — Dominan Cyan, Purple, Magenta (Lebih halus & banyak) ────────── */
+.blob1 {
+  position: absolute;
+  left: -50%;
+  top: -50%;
+  width: 200%;
+  height: 200%;
+  animation: auroraMove1 18s ease-in-out infinite alternate;
+  filter: blur(1px); /* Diperhalus dikit */
+  background:
+    radial-gradient(ellipse 35% 30% at 30% 60%, rgba(0, 201, 228, 0.25) 0%, rgba(0, 201, 228, 0.10) 35%, transparent 60%), /* holi-cyan */
+    radial-gradient(ellipse 30% 25% at 70% 30%, rgba(139, 47, 201, 0.20) 0%, rgba(139, 47, 201, 0.10) 40%, transparent 60%), /* holi-purple */
+    radial-gradient(ellipse 25% 20% at 55% 75%, rgba(232, 23, 156, 0.20) 0%, rgba(232, 23, 156, 0.10) 35%, transparent 55%), /* holi-magenta */
+    radial-gradient(ellipse 40% 25% at 20% 25%, rgba(0, 201, 228, 0.20) 0%, rgba(0, 201, 228, 0.05) 40%, transparent 65%), /* holi-cyan */
+    radial-gradient(ellipse 20% 20% at 80% 60%, rgba(139, 47, 201, 0.15) 0%, rgba(139, 47, 201, 0.05) 30%, transparent 55%), /* holi-purple */
+    transparent;
+}
+
+/* ── Blob 2 — Dominan Yellow, Pink, Coral (Lebih halus & banyak) ──────────── */
+.blob2 {
+  position: absolute;
+  left: -50%;
+  top: -50%;
+  width: 200%;
+  height: 200%;
+  animation: auroraMove2 14s ease-in-out infinite alternate;
+  filter: blur(1px); /* Diperhalus dikit */
+  background:
+    radial-gradient(ellipse 30% 25% at 65% 55%, rgba(255, 217, 61, 0.25) 0%, rgba(255, 217, 61, 0.15) 35%, transparent 60%), /* holi-yellow */
+    radial-gradient(ellipse 25% 20% at 40% 80%, rgba(255, 61, 170, 0.20) 0%, rgba(255, 61, 170, 0.10) 40%, transparent 60%), /* holi-pink */
+    radial-gradient(ellipse 28% 22% at 80% 20%, rgba(255, 74, 74, 0.20) 0%, rgba(255, 74, 74, 0.10) 35%, transparent 60%), /* holi-coral */
+    radial-gradient(ellipse 20% 15% at 30% 40%, rgba(255, 217, 61, 0.20) 0%, rgba(255, 217, 61, 0.05) 30%, transparent 55%), /* holi-yellow */
+    transparent;
+}
+
+/* ── Blob 3 — Mix Semua Warna, titik-titik kecil gesit ────────────────────── */
+.blob3 {
+  position: absolute;
+  left: -50%;
+  top: -50%;
+  width: 200%;
+  height: 200%;
+  animation: auroraMove3 10s ease-in-out infinite alternate;
+  filter: blur(1px); /* Diperhalus dikit */
+  background:
+    radial-gradient(ellipse 18% 15% at 50% 40%, rgba(0, 201, 228, 0.20) 0%, rgba(0, 201, 228, 0.10) 35%, transparent 55%), /* holi-cyan */
+    radial-gradient(ellipse 15% 12% at 25% 65%, rgba(232, 23, 156, 0.20) 0%, rgba(232, 23, 156, 0.10) 35%, transparent 55%), /* holi-magenta */
+    radial-gradient(ellipse 20% 16% at 75% 70%, rgba(255, 217, 61, 0.25) 0%, rgba(255, 217, 61, 0.15) 40%, transparent 60%), /* holi-yellow */
+    radial-gradient(ellipse 14% 12% at 85% 45%, rgba(139, 47, 201, 0.20) 0%, rgba(139, 47, 201, 0.10) 35%, transparent 55%), /* holi-purple */
+    radial-gradient(ellipse 16% 14% at 15% 35%, rgba(255, 74, 74, 0.20) 0%, rgba(255, 74, 74, 0.10) 35%, transparent 55%), /* holi-coral */
+    radial-gradient(ellipse 12% 10% at 60% 20%, rgba(255, 61, 170, 0.15) 0%, rgba(255, 61, 170, 0.05) 30%, transparent 50%), /* holi-pink */
+    transparent;
+}
+
+/* ── Content above aurora ─────────────────────────────────────── */
+.inner {
+  position: relative;
+  z-index: 1;
+}
+
+/* ── "pilih lagi" button — terlihat clickable, no card ───────── */
+.btnBack {
+  background: transparent;
+  border: none;
+  color: var(--foreground-muted);
+  font-family: var(--font-body), cursive;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  padding: 10px 24px;
+  border-radius: var(--radius-pill);
+  position: relative;
+  transition: color 0.2s ease, transform 0.18s ease;
+  -webkit-tap-highlight-color: transparent;
+
+  text-decoration: underline;
+  /* Garis bawah dikasih warna magenta/pink biar kontras di bg terang */
+  text-decoration-color: rgba(232, 23, 156, 0.50); 
+  text-underline-offset: 4px;
+  text-decoration-thickness: 2px;
+}
+
+.btnBack:hover {
+  color: var(--foreground);
+  text-decoration-color: var(--holi-magenta);
+  transform: translateY(-1px);
+}
+
+.btnBack:active {
+  transform: translateY(1px);
+  text-decoration-color: var(--holi-coral);
+}
