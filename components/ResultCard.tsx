@@ -11,7 +11,7 @@ interface ResultCardProps {
     previewUrl: string | null
 }
 
-// ─── Capture Card for Export ───
+// ─── Capture Card for Export (FIXED TEXT WRAPPING) ───
 async function captureCard(cardEl: HTMLElement): Promise<Blob> {
     const { toPng } = await import('html-to-image')
 
@@ -27,13 +27,14 @@ async function captureCard(cardEl: HTMLElement): Promise<Blob> {
     cardEl.style.animation = 'none'
     cardEl.style.boxShadow = 'none'
 
-    await new Promise(r => setTimeout(r, 80))
+    // Beri jeda sedikit agar browser selesai kalkulasi layout asli
+    await new Promise(r => setTimeout(r, 100))
 
     try {
         const dataUrl = await toPng(cardEl, {
             width: exportWidth,
             height: Math.round(cardHeight * scale),
-            pixelRatio: 1,
+            pixelRatio: 1, // Mengunci pixel ratio agar konstan di semua device
             style: {
                 transform: `scale(${scale})`,
                 transformOrigin: 'top left',
@@ -89,20 +90,17 @@ export default function ResultCard({ result, previewUrl }: ResultCardProps) {
             const blob = await captureCard(cardRef.current)
             const file = new File([blob], 'my-frequency.png', { type: 'image/png' })
 
-            // Try Web Share API first (mobile native share sheet)
             if (typeof navigator.share === 'function' && navigator.canShare?.({ files: [file] })) {
                 try {
                     await navigator.share({ files: [file], title: 'My Frequency' })
-                    return // Success
+                    return
                 } catch (err: unknown) {
                     if (err instanceof Error && err.name === 'AbortError') {
-                        return // User cancelled
+                        return
                     }
-                    // Continue to fallback if Web Share fails
                 }
             }
 
-            // Fallback: download + instruction
             triggerDownload(blob)
             showToast('Gambar tersimpan!', 'Buka Instagram → Story → pilih foto ini')
         } catch (err) {
@@ -187,7 +185,6 @@ export default function ResultCard({ result, previewUrl }: ResultCardProps) {
                                 }}
                                 crossOrigin="anonymous"
                             />
-                            {/* Gradient overlay */}
                             <div
                                 style={{
                                     position: 'absolute',
@@ -196,7 +193,6 @@ export default function ResultCard({ result, previewUrl }: ResultCardProps) {
                                     background: 'linear-gradient(180deg,rgba(10,10,12,0) 0%,rgba(10,10,12,0) 25%,rgba(10,10,12,.20) 48%,rgba(10,10,12,.70) 74%,rgba(10,10,12,.95) 90%,#0a0a0c 100%)',
                                 }}
                             />
-                            {/* Vignette */}
                             <div
                                 style={{
                                     position: 'absolute',
@@ -205,7 +201,6 @@ export default function ResultCard({ result, previewUrl }: ResultCardProps) {
                                     background: 'radial-gradient(ellipse 130% 100% at 50% 40%,transparent 28%,rgba(10,10,12,.50) 100%)',
                                 }}
                             />
-                            {/* Header */}
                             <div
                                 style={{
                                     position: 'absolute',
@@ -220,18 +215,26 @@ export default function ResultCard({ result, previewUrl }: ResultCardProps) {
                             >
                                 <span
                                     style={{
-                                        fontSize: '20px',
+                                        fontSize: '15px',
                                         letterSpacing: '0.01em',
-                                        color: 'rgba(255,255,255,0.37)',
+                                        color: 'rgba(255, 255, 255, 0.69)',
                                         fontWeight: 100,
                                         fontFamily: 'var(--font-display), Georgia, serif',
+                                        whiteSpace: 'nowrap',
                                     }}
                                 >
                                     {result.nama ? `${result.nama}, is it good?` : 'FREQUENCIES'}
                                 </span>
                             </div>
-                            {/* Mood tag */}
-                            <div style={{ position: 'absolute', bottom: '16px', left: '18px' }}>
+
+                            <div
+                                style={{
+                                    position: 'absolute',
+                                    bottom: '16px',
+                                    left: '18px',
+                                    transform: 'translateY(-16px)',
+                                }}
+                            >
                                 <span
                                     style={{
                                         display: 'inline-block',
@@ -243,6 +246,7 @@ export default function ResultCard({ result, previewUrl }: ResultCardProps) {
                                         padding: '5px 10px',
                                         fontWeight: 600,
                                         fontFamily: 'var(--font-mono), monospace',
+                                        whiteSpace: 'nowrap', // Mengunci teks tag biar anti-wrap
                                     }}
                                 >
                                     {result.mood_tag}
@@ -261,81 +265,91 @@ export default function ResultCard({ result, previewUrl }: ResultCardProps) {
                                 position: 'relative',
                             }}
                         >
-                            {/* Punchline */}
-                            <div>
-                                <div
-                                    style={{
-                                        width: '32px',
-                                        height: '1.5px',
-                                        marginBottom: '14px',
-                                        background: '#facc15', // 1. Garis kecil diubah jadi warna kuning
-                                    }}
-                                />
-                                <p
-                                    style={{
-                                        fontSize: '20px',
-                                        fontWeight: 400,
-                                        lineHeight: 1.3,
-                                        letterSpacing: '-0.02em',
-                                        color: '#eeecf2',
-                                        fontStyle: 'italic',
-                                        margin: 0,
-                                        fontFamily: 'var(--font-display), Georgia, serif',
-                                    }}
-                                >
-                                    &ldquo;{result.punchline}&rdquo;
-                                </p>
+                            <div
+                                style={{
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    gap: '24px',
+                                    transform: 'translateY(-16px)',
+                                }}
+                            >
+                                {/* Punchline Group */}
+                                <div>
+                                    <div
+                                        style={{
+                                            width: '32px',
+                                            height: '1.5px',
+                                            marginBottom: '14px',
+                                            background: '#facc15',
+                                        }}
+                                    />
+                                    <p
+                                        style={{
+                                            fontSize: '20px',
+                                            fontWeight: 400,
+                                            lineHeight: 1.3,
+                                            letterSpacing: '-0.02em',
+                                            color: '#eeecf2',
+                                            fontStyle: 'italic',
+                                            margin: 0,
+                                            fontFamily: 'var(--font-display), Georgia, serif',
+                                        }}
+                                    >
+                                        &ldquo;{result.punchline}&rdquo;
+                                    </p>
+                                </div>
+
+                                {/* Track Info Group */}
+                                <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                                    <p
+                                        style={{
+                                            fontSize: '11px',
+                                            letterSpacing: '0.18em',
+                                            textTransform: 'uppercase',
+                                            color: 'rgba(255,255,255,0.38)',
+                                            margin: 0,
+                                            fontFamily: 'var(--font-mono), monospace',
+                                            fontWeight: 500,
+                                            whiteSpace: 'nowrap',
+                                        }}
+                                    >
+                                        What Describes Your Vibe
+                                    </p>
+                                    <p
+                                        style={{
+                                            fontSize: '22px',
+                                            color: '#ffffff',
+                                            fontWeight: 600,
+                                            whiteSpace: 'nowrap', // Memaksa judul satu baris
+                                            overflow: 'hidden',
+                                            textOverflow: 'ellipsis', // Jika kepanjangan otomatis berubah jadi titik-titik (...)
+                                            letterSpacing: '-0.02em',
+                                            lineHeight: 1.15,
+                                            margin: 0,
+                                            fontFamily: 'var(--font-display), Georgia, serif',
+                                        }}
+                                    >
+                                        {result.judul}
+                                    </p>
+                                    <p
+                                        style={{
+                                            fontSize: '12px',
+                                            color: 'rgba(255,255,255,0.38)',
+                                            margin: 0,
+                                            whiteSpace: 'nowrap', // Memaksa nama penyanyi satu baris
+                                            overflow: 'hidden',
+                                            textOverflow: 'ellipsis', // Jika kepanjangan otomatis berubah jadi titik-titik (...)
+                                            fontWeight: 400,
+                                            letterSpacing: '0.01em',
+                                            fontFamily: 'var(--font-body), sans-serif',
+                                        }}
+                                    >
+                                        {result.penyanyi}
+                                    </p>
+                                </div>
                             </div>
 
-                            {/* Track info */}
-                            <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                                <p
-                                    style={{
-                                        fontSize: '11px',
-                                        letterSpacing: '0.18em',
-                                        textTransform: 'uppercase',
-                                        color: 'rgba(255,255,255,0.38)',
-                                        margin: 0,
-                                        fontFamily: 'var(--font-mono), monospace',
-                                        fontWeight: 500,
-                                    }}
-                                >
-                                    What Describes Your Vibe
-                                </p>
-                                <p
-                                    style={{
-                                        fontSize: '22px',
-                                        color: '#ffffff',
-                                        fontWeight: 600,
-                                        whiteSpace: 'nowrap',
-                                        overflow: 'hidden',
-                                        textOverflow: 'ellipsis',
-                                        letterSpacing: '-0.02em',
-                                        lineHeight: 1.15,
-                                        margin: 0,
-                                        fontFamily: 'var(--font-display), Georgia, serif',
-                                    }}
-                                >
-                                    {result.judul}
-                                </p>
-                                <p
-                                    style={{
-                                        fontSize: '12px',
-                                        color: 'rgba(255,255,255,0.38)',
-                                        margin: 0,
-                                        whiteSpace: 'nowrap',
-                                        overflow: 'hidden',
-                                        textOverflow: 'ellipsis',
-                                        fontWeight: 400,
-                                        letterSpacing: '0.01em',
-                                        fontFamily: 'var(--font-body), sans-serif',
-                                    }}
-                                >
-                                    {result.penyanyi}
-                                </p>
-                            </div>
-
-                            {/* Footer */}
+                            {/* Footer Logo */}
                             <div
                                 style={{
                                     textAlign: 'center',
@@ -348,35 +362,35 @@ export default function ResultCard({ result, previewUrl }: ResultCardProps) {
                                     justifyContent: 'flex-end'
                                 }}
                             >
-                                {/* Nilai bottom diganti dari 28px ke 18px biar posisi logo agak turun kebawah */}
                                 <img
                                     src="/logowhite.png"
                                     alt="App Logo"
                                     style={{
-                                        height: '100px',
+                                        height: '90px',
                                         width: 'auto',
                                         objectFit: 'contain',
-                                        filter: 'drop-shadow(0 0 1px #facc15)',
                                         position: 'absolute',
-                                        bottom: '-10px', // <--- UBAH DI SINI (makin kecil angkanya, makin turun logonya)
+                                        bottom: '-4px',
                                         left: '50%',
                                         transform: 'translateX(-50%)',
-                                        pointerEvents: 'none'
+                                        pointerEvents: 'none',
+                                        opacity: 0.12,
                                     }}
                                 />
 
                                 <span
                                     style={{
-                                        fontSize: '13px',
-                                        letterSpacing: '0.02em',
+                                        fontSize: '10px',
+                                        letterSpacing: '0.001em',
                                         color: '#facc15',
                                         fontFamily: 'jetbrains mono, monospace',
                                         fontWeight: 500,
                                         position: 'relative',
-                                        zIndex: 10
+                                        zIndex: 10,
+                                        whiteSpace: 'nowrap',
                                     }}
                                 >
-                                    find yours on frequenciess.vercel.app
+                                    Tune in at frequenciess.vercel.app
                                 </span>
                             </div>
                         </div>
