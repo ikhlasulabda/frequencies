@@ -38,7 +38,11 @@ export default function AudioPlayer({ previewUrl }: AudioPlayerProps) {
     function toggle() {
         const a = audioRef.current
         if (!a) return
-        playing ? a.pause() : a.play()
+        if (playing) {
+            a.pause()
+        } else {
+            a.play()
+        }
     }
 
     const seekTo = useCallback((clientX: number) => {
@@ -166,7 +170,6 @@ export default function AudioPlayer({ previewUrl }: AudioPlayerProps) {
                     {BAR_HEIGHTS.map((h, i) => {
                         const barPct   = (i / N_BARS) * 100
                         const filled   = barPct <= progress
-                        const isHead   = filled && ((i + 1) / N_BARS) * 100 > progress
 
                         return (
                             <div

@@ -66,7 +66,7 @@ export default function LoadingScreen() {
                     zIndex: 1,
                 }}
             >
-                AI matching process (Waitt ya cintaku)
+                AI matching process
             </motion.p>
         </div>
     )

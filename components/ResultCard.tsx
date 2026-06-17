@@ -62,9 +62,7 @@ async function captureCard(cardEl: HTMLElement): Promise<Blob> {
 
 export default function ResultCard({ result, previewUrl }: ResultCardProps) {
     const cardRef = useRef<HTMLDivElement>(null)
-    const audioRef = useRef<HTMLAudioElement>(null)
 
-    const [playing, setPlaying] = useState(false)
     const [loading, setLoading] = useState(false)
     const [toast, setToast] = useState<{ show: boolean; msg: string; sub?: string }>({ show: false, msg: '' })
 
@@ -118,17 +116,6 @@ export default function ResultCard({ result, previewUrl }: ResultCardProps) {
                     to { transform: rotate(360deg); }
                 }
             `}</style>
-
-            {previewUrl && (
-                <audio
-                    ref={audioRef}
-                    src={previewUrl}
-                    preload="metadata"
-                    onPlay={() => setPlaying(true)}
-                    onPause={() => setPlaying(false)}
-                    onEnded={() => setPlaying(false)}
-                />
-            )}
 
             <motion.div
                 style={{

@@ -148,7 +148,7 @@ export default function LandingPage() {
               marginBottom: '60px',
               fontWeight: 400,
             }}>
-              Gua bisa nebak lagu yang "lu banget" wkwk, mau nyobain??
+              Gua bisa nebak lagu yang &quot;lu banget&quot; wkwk, mau nyobain??
             </p>
           </motion.div>
 

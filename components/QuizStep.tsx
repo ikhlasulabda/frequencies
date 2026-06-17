@@ -1,7 +1,7 @@
 // components/QuizStep.tsx
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { Question } from '@/types'
 
@@ -12,25 +12,23 @@ interface QuizStepProps {
 }
 
 export default function QuizStep({ question, value, onChange }: QuizStepProps) {
-    const [showCustomInput, setShowCustomInput] = useState(false)
+    const [showCustomInput, setShowCustomInput] = useState(() => {
+        if (question.id === 2) {
+            const isPredefined = question.choices?.some(c => c.label === value) ?? false
+            return !!value && !isPredefined
+        }
+        return false
+    })
+    const [prevQuestionId, setPrevQuestionId] = useState(question.id)
+
+    if (question.id !== prevQuestionId) {
+        setPrevQuestionId(question.id)
+        const isPredefined = question.choices?.some(c => c.label === value) ?? false
+        setShowCustomInput(!!value && !isPredefined)
+    }
 
     const isDualColumn = question.id === 1 || question.id === 3
     const choices = question.choices ?? []
-
-    useEffect(() => {
-        if (question.id === 2) {
-            const isPredefined = question.choices?.some(c => c.label === value) ?? false
-            if (value && !isPredefined) {
-                setShowCustomInput(true)
-            } else if (!value) {
-                // Keep the state of custom input if clicked but not yet typed
-            } else {
-                setShowCustomInput(false)
-            }
-        } else {
-            setShowCustomInput(false)
-        }
-    }, [question.id, value, question.choices])
 
     function renderChoice(choice: { label: string; display: string }, index: number) {
         const isSelected = !showCustomInput && value === choice.label
