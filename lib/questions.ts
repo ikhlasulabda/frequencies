@@ -90,7 +90,7 @@ export const QUESTIONS: Question[] = [
     {
         id: 1,
         type: 'choice',
-        text: 'Kondisi nyata lu pas orang-orang pada sibuk malming kek gimana?',
+        text: 'pas orang-orang pada sibuk malem mingguan, lu ngapain?',
         choices: [
             { label: 'solitary, peaceful, isolated by choice', display: 'Me time mode, earphone on, lampu mati' },
             { label: 'extroverted, highly social, seeking company', display: 'Nongkrong bareng circle terdekat, anti-ansos' },
@@ -113,7 +113,7 @@ export const QUESTIONS: Question[] = [
     {
         id: 3,
         type: 'choice',
-        text: 'Ibarat hidup lo sekarang dijadiin film, genrenya apa?',
+        text: 'Ibarat hidup lu sekarang dijadiin film, genrenya apa?',
         choices: [
             { label: 'identity crisis, figuring out life purpose', display: 'Coming-of-age yang penuh krisis jati diri' },
             { label: 'resilient through structural chaos and stress', display: 'Everything is on fire tapi tetep kudu jalan terus' },
@@ -132,7 +132,7 @@ export const QUESTIONS: Question[] = [
         type: 'text',
         text: "Coba lengkapin yahh: Belakangan ini gue ngerasa...",
         maxLength: 150,
-        placeholder: 'apa aja pokoknya luapin emosi lu, tapi jangan panjang bgt juga, capek gua bacanya (use english for better output)'
+        placeholder: 'apa aja pokoknya luapin emosi lu... (use english for better output)'
     },
     {
         id: 5,

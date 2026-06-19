@@ -115,7 +115,7 @@ export default function QuizStep({ question, value, onChange }: QuizStepProps) {
                                         value={question.choices?.some(c => c.label === value) ? '' : value}
                                         onChange={(e) => onChange(e.target.value)}
                                         maxLength={100}
-                                        placeholder="Ceritain kondisi lo..."
+                                        placeholder="Ceritain kondisi lu..."
                                         rows={3}
                                         autoFocus
                                         className="textarea-field"
